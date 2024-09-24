@@ -185,6 +185,7 @@ io.on("connection", (socket) => {
                     userId: "Geral",
                     message: "Saiu da sala",
                     username,
+                    language,
                 });
             }
         } catch (error) {
