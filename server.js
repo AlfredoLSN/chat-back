@@ -86,9 +86,10 @@ app.get("/room/:roomName", async (req, res) => {
     }
 });
 
-app.get("/room/:userId", async (req, res) => {
+app.get("/room/user/:userId", async (req, res) => {
     try {
-        const rooms = await Room.find({ users: req.params.userId });
+        let userId = req.params.userId;
+        const rooms = await Room.find({ users: userId });
         res.status(200).json(rooms);
     } catch (error) {
         res.status(400).send("Erro ao obter salas: " + error.message);
@@ -170,7 +171,9 @@ io.on("connection", (socket) => {
         try {
             const room = await Room.findOne({ name: roomName });
             if (room) {
-                room.users = room.users.filter((id) => id !== socket.userId);
+                room.users = room.users.filter(
+                    (id) => id.toString() !== socket.userId
+                );
                 await room.save();
                 if (room.users.length === 0)
                     await Room.deleteOne({ name: roomName });
