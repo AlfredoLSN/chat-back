@@ -231,6 +231,6 @@ io.on("connection", (socket) => {
 
 // Servidor rodando na porta especificada
 const PORT = process.env.SERVER_PORT;
-server.listen(PORT, () => {
+server.listen(process.env.PORT ? Number(rocess.env.PORT) : 3333, () => {
     console.log(`Servidor rodando na porta ${PORT}`);
 });
