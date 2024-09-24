@@ -149,7 +149,7 @@ io.on("connection", (socket) => {
                 console.log(
                     `Usuário ${socket.userId} entrou na sala: ${roomName}`
                 );
-                io.to(roomName).emit("message", {
+                io.to(roomName).except(socket.id).emit("message", {
                     userId: "Geral",
                     message: "Entrou na sala",
                     username,
@@ -166,7 +166,7 @@ io.on("connection", (socket) => {
         }
     });
 
-    socket.on("leaveRoom", async (roomName) => {
+    socket.on("leaveRoom", async (roomName, username) => {
         if (!socket.userId) return;
         try {
             const room = await Room.findOne({ name: roomName });
@@ -184,6 +184,7 @@ io.on("connection", (socket) => {
                 io.to(roomName).emit("message", {
                     userId: "Geral",
                     message: "Saiu da sala",
+                    username,
                 });
             }
         } catch (error) {
