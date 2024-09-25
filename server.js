@@ -145,7 +145,7 @@ io.on("connection", (socket) => {
             if (!room.users.includes(socket.userId)) {
                 room.users.push(socket.userId);
                 await room.save();
-                socket.join(roomName);
+                //socket.join(roomName);
                 console.log(
                     `Usuário ${socket.userId} entrou na sala: ${roomName}`
                 );
@@ -157,7 +157,7 @@ io.on("connection", (socket) => {
                 });
                 return;
             }
-            socket.join(roomName);
+            //socket.join(roomName);
             console.log(
                 `Usuário ${socket.userId} já está na sala: ${roomName}`
             );
@@ -193,6 +193,20 @@ io.on("connection", (socket) => {
         }
     });
 
+    socket.on("startListen", async (roomName) => {
+        if (!socket.userId) return;
+        try {
+            const room = await Room.findOne({ name: roomName });
+            if (room) {
+                socket.join(roomName);
+                console.log(
+                    `Usuário ${socket.userId} começou a escutar a sala: ${roomName}`
+                );
+            }
+        } catch (error) {
+            console.error("Erro ao começar a escutar a sala:", error);
+        }
+    });
     socket.on("stopListen", async (roomName) => {
         if (!socket.userId) return;
         try {
