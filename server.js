@@ -166,7 +166,7 @@ io.on("connection", (socket) => {
         }
     });
 
-    socket.on("leaveRoom", async (roomName, username) => {
+    socket.on("leaveRoom", async (roomName, username, language) => {
         if (!socket.userId) return;
         try {
             const room = await Room.findOne({ name: roomName });
